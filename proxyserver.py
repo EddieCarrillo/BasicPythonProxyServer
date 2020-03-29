@@ -1,66 +1,70 @@
-from socket import * 
 import sys
-if len(sys.argv) <= 1:
-    print('Usage : "python ProxyServer.py server_ip"\n[server_ip : It is the IP Address Of Proxy Server')
-    sys.exit(2)
-# Create a server socket, bind it to a port and start listening 
-tcpSerSock = socket(AF_INET, SOCK_STREAM)
-# Fill in start.
-# Fill in end.
-while 1:
-    # Strat receiving data from the client 
-    print('Ready to serve...')
-    tcpCliSock, addr = tcpSerSock.accept()
-    print('Received a connection from:', addr) 
-    message = # Fill in start. # Fill in end. 
-    print(message)
-    # Extract the filename from the given message 
-    print(message.split()[1])
-    filename = message.split()[1].partition("/")[2] 
-    print(filename)
-    fileExist = "false"
-    filetouse = "/" + filename
-    print(filetouse)
-    try:
-        # Check wether the file exist in the cache
-        f = open(filetouse[1:], "r")
-        outputdata = f.readlines()
-        fileExist = "true"
-        # ProxyServer finds a cache hit and generates a response message
-        tcpCliSock.send("HTTP/1.0 200 OK\r\n") 
-        tcpCliSock.send("Content-Type:text/html\r\n")
-        # Fill in start.
-        # Fill in end.
-        print('Read from cache')
-    # Error handling for file not found in cache
-    except IOError:
-        if fileExist == "false":
-            # Create a socket on the proxyserver
-            c = # Fill in start. # Fill in end. 
-            hostn = filename.replace("www.","",1) 
-            print(hostn)
-            try:
-                # Connect to the socket to port 80
-                # Fill in start.
-                # Fill in end.
-                # Create a temporary file on this socket and ask port 80
-                for the file requested by the client
-                    fileobj = c.makefile('r', 0)
-                    fileobj.write("GET "+"http://" + filename + "HTTP/1.0\n\n")
+import os
+from urllib.parse import urlparse
+from socket import *
 
-                # Read the response into buffer
-                # Fill in start.
+def sendRequest(url):
+    path = url.path
+    hostname = url.netloc
+    clientTcpSocket = socket(AF_INET, SOCK_STREAM)
+    clientTcpSocket.connect((hostname,80))
+    requestString = f"GET {path} HTTP/1.0\r\nHost:{hostname}\r\n\r\n"
+    clientTcpSocket.send(requestString.encode())
+    resp = clientTcpSocket.recv(1 << 20)
+    return resp
 
-                # Fill in end.
-                # Create a new file in the cache for the requested file.
-                # Also send the response in the buffer to client socket and the corresponding file in the cache
-                tmpFile = open("./" + filename,"wb") # Fill in start.
-                # Fill in end.
-            except:
-                print("Illegal request")
-        else:
-# HTTP response message for file not found # Fill in start.
-# Fill in end.
-# Close the client and the server sockets
-tcpCliSock.close()
-# Fill in start. # Fill in end.
+
+#def test():
+#    cwd = os.getcwd()
+#    hostname = "mathalgs.com"
+#    path = "/index.html"[1:]
+#    cachedFilePathStr = os.path.join(cwd,hostname,path)#f"{cwd}/{hostname}{path}"
+#    pathDir = os.path.dirname(path)
+#    if not os.path.exists(cachedFilePathStr):
+#        os.makedirs(cachedFilePathStr)
+
+def main():
+    tcpServerSocket = socket(AF_INET,SOCK_STREAM)
+    tcpServerSocket.bind(("",12345))
+    tcpServerSocket.listen(1)
+    
+    while True:
+        connectionSocket,addr = tcpServerSocket.accept()
+        message = connectionSocket.recv(1 << 20).decode()
+        cwd = os.getcwd()
+        print(message)
+        urlString = message.split()[1]
+        parsedUrl = urlparse(urlString) 
+        hostname = parsedUrl.netloc
+        path = parsedUrl.path
+        if path == "/" or path == "" :
+            path =  "/index.html"
+        cachedFilePath = os.path.join(cwd,hostname,path[1:])
+        try:
+            print("preopen")
+            cachedFile = open(cachedFilePath,'rb')
+            print("post open")
+            print("pre cache read")
+            #Send back data from file, header data saved in the file
+            connectionSocket.send(cachedFile.read())
+            cachedFile.close()
+            
+            print("post cache read")
+            print('Sent back the cached data')
+        except:
+            #Perform the request, and send back the data
+            response = sendRequest(parsedUrl)
+            print(f"response: {response}")
+            #Cache the result
+            if not os.path.exists(os.path.dirname(cachedFilePath)):
+                os.makedirs(os.path.dirname(cachedFilePath))
+            with open(cachedFilePath,'wb') as cachedFile:
+                cachedFile.write(response)
+            #Send back the response
+            connectionSocket.send(response)
+            connectionSocket.close()
+        
+    tcpServerSocket.close()
+    print("Done")
+        
+if __name__ == "__main__" : main()

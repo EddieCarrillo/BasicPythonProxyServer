@@ -1,0 +1,164 @@
+HTTP/1.1 200 OK
+Date: Sun, 29 Mar 2020 03:39:41 GMT
+Server: Apache
+Upgrade: h2,h2c
+Connection: Upgrade, close
+Last-Modified: Thu, 20 Jun 2019 06:01:00 GMT
+Accept-Ranges: bytes
+Content-Length: 1873
+Vary: Accept-Encoding
+Access-Control-Allow-Origin: *
+Content-Type: text/css
+
+.header{
+  padding:20px;
+  text-align: center;
+  background: white;
+  color: black;
+}
+
+html, body {
+  margin:0;
+  height:100%
+}
+
+.header h1 {
+  font-size: 40px
+}
+
+
+.navbar{
+  overflow: hidden;
+  background-color: #222
+}
+.navbar a {
+  float: left; /*Make sure the links stay side by side'*/
+  display: block; /*Change the display to block for responsive reasonss*/
+  text-align: center;
+  padding: 14px 20px;
+  text-decoration: none;
+  color:white
+}
+
+.navbar a.right{
+  float: right; /*Float a link to the right*/
+}
+
+.navbar a:hover{
+  background-color: #ddd;
+  color: black;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.row{
+  display: flex;
+  flex-wrap: wrap;
+  height:100%;
+}
+
+.side{
+  flex: 30%;
+  background-color: #f1f1f1;
+  padding: 20px;
+}
+
+.preview{
+  flex: 70%;
+}
+.row{
+  margin-top: 40px;
+  padding-top: 40px;
+}
+
+.footer{
+  position:fixed;
+  left:0;
+  bottom:0;
+  width:100%;
+  background-color:gray;
+  color:white;
+  text-align:center;
+}
+
+.login_container{
+  float:right;
+  background-color: :red;
+  padding: 10px
+}
+
+.blah{
+  background-color: orange;
+}
+
+.articlepreview{
+  display: block;
+  height:100%;
+  weight:100%;
+  border-color: orange;
+}
+.bottom a:link{
+  color:black;
+}
+
+.bottom a:visited{
+  color:black;
+}
+#container{
+  width:400px;
+  height: 400px;
+  position:relative;
+  background:yellow;
+}
+
+#animate{
+  width:50;
+  height: 50;
+  position:absolute;
+  background:red;
+}
+
+@font-face{
+  font-family: charter;
+  src: url("./BitstreamCharter.woff");
+}
+
+*{
+  font-family: charter;
+  margin: auto;
+  text-align: center;
+}
+ul{
+  list-style: none;
+  padding-top: 20px;
+}
+
+li{
+  align-content: center;
+}
+
+h1.arttopics{
+  align-content: center;
+  text-align: center;
+
+}
+
+h1{
+  font-size: 100px;
+}
+
+.arttitle{
+  align-content: center;
+  text-align: center;
+  margin-top: 50px;
+  padding-top: 50px;
+
+}
+
+img.author{
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+}
